@@ -73,11 +73,11 @@ archives:
       {{- else }}{{ tolower .Arch }}{{ end }}
     format: tar.gz
     files:
-    - LICENSE
-    - README.md
+      - LICENSE
+      - README.md
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 
 snapshot:
   name_template: "{{ .Tag }}"
@@ -86,19 +86,19 @@ changelog:
   sort: asc
   filters:
     exclude:
-      - '^docs:'
-      - '^test:'
-      - '^GitBook:'
+      - "^docs:"
+      - "^test:"
+      - "^GitBook:"
 
 release:
   draft: true
-  name_template: '{{ .Tag }}'
-  target_commitish: '{{ .Commit }}'
+  name_template: "{{ .Tag }}"
+  target_commitish: "{{ .Commit }}"
 
 brews:
   - name: substreams-sink-noop
     ids:
-    - substreams-sink-noop
+      - substreams-sink-noop
     tap:
       owner: streamingfast
       name: homebrew-tap
@@ -106,5 +106,5 @@ brews:
       name: goreleaserbot
       email: goreleaser@streamingfast.io
     homepage: "https://github.com/streamingfast/substreams-sink-noop"
-    description: "StreamingFast CLI for 'substreams-sink-noop'"
+    description: "DEPRECATED: Use 'substreams sink noop' subcommand instead - see github.com/streamingfast/substreams"
     license: "Apache-2.0"

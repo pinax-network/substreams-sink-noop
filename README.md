@@ -1,4 +1,30 @@
-## Substreams Sink NoOp
+# ⚠️ DEPRECATED - Substreams Sink NoOp
+
+> **This repository is deprecated. Please use the `substreams sink noop` subcommand from the main [Substreams](https://github.com/streamingfast/substreams) program instead.**
+
+## Migration Instructions
+
+Instead of using this standalone tool like this:
+
+```bash
+substreams-sink-noop mainnet.eth.streamingfast.io:443  /path/to/substreams.spkg outputmodule 0:100000 --noop-mode
+```
+
+Get the substreams binary from https://github.com/streamingfast/substreams
+
+Run this
+
+```bash
+substreams sink noop mainnet.eth.streamingfast.io:443 /path/to/substreams.spkg outputmodule -s 0 -t 100000
+```
+
+For more information and documentation, please visit: https://github.com/streamingfast/substreams
+
+---
+
+## Legacy Documentation (for reference only)
+
+### About
 
 A small sink that can be used to "bootstrap" a Substreams consuming it at the gRPC level discarding the data right away while recording keys metrics of the sink.
 
@@ -6,7 +32,7 @@ You can use that tool to have a Substreams fully synced and which keeps up with 
 
 The tool while it runs exposes a bunch of metrics (`0.0.0.0:9102` by default) about the consumption process as well as tracking the cursor and some key metrics of a particular Substreams run.
 
-## Usage
+### Legacy Usage
 
 Install the binary:
 
@@ -20,11 +46,11 @@ substreams-sink-noop mainnet.eth.streamingfast.io:443 https://github.com/streami
 
 > **Note** By default, a subsequent run will restart from last saved cursor found by default in file `pwd`/state.yaml, you can pass `--clean` to start from scratch each time.
 
-## Management API
+### Management API
 
 You can use the management API while the application is running to clean the state on next restart.
 
-### Reset state on next restart
+#### Reset state on next restart
 
 ```shell
 # Reset state on next restart
