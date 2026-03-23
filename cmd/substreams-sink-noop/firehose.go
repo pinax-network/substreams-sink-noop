@@ -49,8 +49,7 @@ func NewFirehoseClient(config *FirehoseClientConfig) (cli pbfirehose.StreamClien
 	}
 
 	dialOptions = append(dialOptions,
-		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
-		grpc.WithStreamInterceptor(otelgrpc.StreamClientInterceptor()),
+		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
 	)
 
 	if config.JWT != "" && !config.PlainText {
