@@ -3,4 +3,4 @@ state.yaml
 .idea
 /build
 /dist
-target
+targetsubstreams-sink-noop

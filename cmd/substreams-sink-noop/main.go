@@ -118,10 +118,11 @@ func run(cmd *cobra.Command, args []string) error {
 		zap.String("manage_listen_addr", apiListenAddr),
 	)
 
-	headTrackerClient, headTrackerConnClose, headTrackerCallOpts, headTrackerHeaders, err := client.NewSubstreamsClient(sinker.ClientConfig())
+	headTrackerConn, headTrackerConnClose, headTrackerCallOpts, headTrackerHeaders, err := client.NewSubstreamsClientConn(sinker.ClientConfig())
 	cli.NoError(err, "Unable to create head tracker client")
 	defer headTrackerConnClose()
 
+	headTrackerClient := pbsubstreamsrpc.NewStreamClient(headTrackerConn)
 	headFetcher := NewHeadTracker(headTrackerClient, headTrackerCallOpts, headTrackerHeaders)
 	app.OnTerminating(func(_ error) { headFetcher.Close() })
 	headFetcher.OnTerminated(func(err error) { app.Shutdown(err) })
