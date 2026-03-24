@@ -165,4 +165,4 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
-replace github.com/streamingfast/substreams-sink => github.com/pinax-network/substreams-sink-go v0.5.9
+replace github.com/streamingfast/substreams-sink => github.com/pinax-network/substreams-sink-go v0.5.10
