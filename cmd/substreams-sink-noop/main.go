@@ -136,6 +136,8 @@ func run(cmd *cobra.Command, args []string) error {
 
 	stats := NewStats(stopBlock, headFetcher, func() *sink.Cursor {
 		return sinker.activeCursor
+	}, func() time.Time {
+		return sinker.lastBlockTime
 	})
 	app.OnTerminating(func(_ error) { stats.Close() })
 	stats.OnTerminated(func(err error) { app.Shutdown(err) })
@@ -214,6 +216,7 @@ type Sinker struct {
 	headFetcher *HeadTracker
 
 	activeCursor            *sink.Cursor
+	lastBlockTime           time.Time
 	headBlockReached        bool
 	outputDataHash          *dataHasher
 	backprocessingCompleted bool
@@ -229,6 +232,9 @@ func (s *Sinker) HandleBlockScopedData(ctx context.Context, data *pbsubstreamsrp
 	block := bstream.NewBlockRef(data.Clock.Id, data.Clock.Number)
 	ProcessedBlockCount.Inc()
 	s.activeCursor = cursor
+	if data.Clock.Timestamp != nil {
+		s.lastBlockTime = data.Clock.Timestamp.AsTime()
+	}
 	s.backprocessingCompleted = true
 
 	chainHeadBlock, found := s.headFetcher.Current()

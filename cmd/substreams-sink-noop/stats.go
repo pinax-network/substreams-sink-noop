@@ -23,13 +23,15 @@ type Stats struct {
 	backprocessingCompletion *dmetrics.ValueFromMetric
 	headBlockReached         *dmetrics.ValueFromMetric
 	fetchCursor              func() *sink.Cursor
+	fetchBlockTime           func() time.Time
 }
 
-func NewStats(stopBlock uint64, headFetcher *HeadTracker, fetchCursor func() *sink.Cursor) *Stats {
+func NewStats(stopBlock uint64, headFetcher *HeadTracker, fetchCursor func() *sink.Cursor, fetchBlockTime func() time.Time) *Stats {
 	return &Stats{
 		Shutter:                  shutter.New(),
 		stopBlock:                stopBlock,
 		fetchCursor:              fetchCursor,
+		fetchBlockTime:           fetchBlockTime,
 		headFetcher:              headFetcher,
 		backprocessingCompletion: dmetrics.NewValueFromMetric(BackprocessingCompletion, "completion"),
 		headBlockReached:         dmetrics.NewValueFromMetric(HeadBlockReached, "reached"),
@@ -77,6 +79,10 @@ func (s *Stats) LogNow() {
 		zap.Bool("head_block_reached", s.headBlockReached.ValueUint() > 0),
 		zap.Float64("avg_blocks_sec", s.processedBlockRate.Rate()),
 	)
+
+	if blockTime := s.fetchBlockTime(); !blockTime.IsZero() {
+		fields = append(fields, zap.Duration("drift", time.Since(blockTime)))
+	}
 
 	zlog.Info("substreams sink noop stats", fields...)
 }
